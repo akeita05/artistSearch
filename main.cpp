@@ -2,9 +2,13 @@
 // Created by Aicha Keita on 11/29/24.
 //
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
 
 
-int main() {
+int main()
+{
     //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
     std::cout << std:: endl;
@@ -31,14 +35,150 @@ int main() {
     std::cout << "3. Explicit Language" << std::endl;
     std::cout << "4. Popularity" << std::endl;
     std::cout << "5. Genre" << std::endl;
-    std::cout << "Enter the number(s) of the categories you want to filter by! (please separate different categories with a comma)" << std::endl;
+    std::cout << "Enter the number(s) of the categories you want to filter by! (please separate different categories with a space)" << std::endl;
 
     //variables :) - aicha
     std::string filterInput;
 
     //interpret the input :) - aicha
-    std::cin >> filterInput;
+    std::getline(std::cin, filterInput);
+    std::cout << std::endl;
 
+    //split the input into a vector :) - aicha
+    std::vector<std::string> dividedInput;
+
+    //split the string by spaces :-) - aicha
+    std::istringstream iss(filterInput);
+    std::string inputPart;
+    while (iss >> inputPart)
+    {
+        dividedInput.push_back(inputPart);
+    }
+
+    //understanding the input: variables :D - aicha
+    int filterNum = dividedInput.size();
+
+    float energyLevel = 0.0;
+    bool energy = false;
+
+    float danceabilityLevel = 0.0;
+    bool danceability = false;
+
+    bool explicitLang = false;
+    bool language = false;
+
+    float popularityLevel = 0.0;
+    bool popularity = false;
+
+    std::string genreType;
+    bool genre = false;
+
+    //figure our what we are filtering by and give the user choices :D - aicha
+    while (filterNum > 0)
+    {
+        if(dividedInput[0] == "1" && !energy)
+        {
+            //TO DO: energy choices
+            std::cout << "You've chosen energy!" << std::endl;
+            std::cout << "Enter a number between 1-10 for how energetic you would like the artist's songs to be." << std::endl;
+            std::cout << "(10 being the highest possible energy, 1 being the lowest)" << std::endl;
+
+            std::cin >> energyLevel;
+            energy = true;
+
+            std::cout << std::endl;
+        }
+        else if (dividedInput[0] == "2" && !danceability)
+        {
+            //TO DO: danceability choices
+            std::cout << "You've chosen danceability!" << std::endl;
+            std::cout << "Enter a number between 1-10 for how danceable you would like the artist's songs to be." << std::endl;
+            std::cout << "(10 being the highest possible danceability, 1 being the lowest)" << std::endl;
+
+            std::cin >> danceabilityLevel;
+            danceability = true;
+
+            std::cout << std::endl;
+        }
+        else if (dividedInput[0] == "3" && !language)
+        {
+            //TO DO: explicit language choices
+            std::cout << "You've chosen explicit language!" << std::endl;
+            std::cout << "Type in 'T' if you want you want explicit language and 'F' if you don't." << std::endl;
+
+            std::string tOrF;
+            std::cin >> tOrF;
+
+            if (tOrF == "T")
+            {
+                explicitLang = true;
+            }
+            else if (tOrF == "F")
+            {
+                explicitLang = false;
+            }
+
+            language = true;
+
+            std::cout << std::endl;
+        }
+        else if (dividedInput[0] == "4" && !popularity)
+        {
+            //TO DO: popularity choices
+            std::cout << "You've chosen popularity!" << std::endl;
+            std::cout << "Enter a number between 1-10 for how popular you would like the artist's songs to be." << std::endl;
+            std::cout << "(10 being the most popular, 1 being the least)" << std::endl;
+
+            std::cin >> popularityLevel;
+            popularity = true;
+
+            std::cout << std::endl;
+        }
+        else if (dividedInput[0] == "5" && !genre)
+        {
+            //TO DO: genre choices
+            //y'all there's like 114 different genres so if anyone has an idea of how to do it I'm all ears - aicha
+            genre = true;
+
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "Invalid Entry :(" << std::endl;
+
+            std::cout << std::endl;
+        }
+
+        //remove the first element and move on :D - aicha
+        dividedInput.erase(dividedInput.begin());
+        filterNum--;
+    }
+
+    //filter! :-P - aicha
+    if (energy)
+    {
+        //filter by energy
+    }
+    if (danceability)
+    {
+        //filter by danceability
+    }
+    if (language)
+    {
+        //filter by language
+    }
+    if (popularity)
+    {
+        //filter by popularity
+    }
+    if (genre)
+    {
+        //filter by genre
+    }
+
+    //finally, print the artist!
+    std::cout << "Based on your choices, here are some artist you may like: " << std::endl;
+    //print the artist(s) that match!
 
     return 0;
 }
