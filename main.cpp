@@ -154,6 +154,31 @@ int main()
         filterNum--;
     }
 
+    //filter! :-P - aicha
+    if (energy)
+    {
+        //filter by energy
+    }
+    if (danceability)
+    {
+        //filter by danceability
+    }
+    if (language)
+    {
+        //filter by language
+    }
+    if (popularity)
+    {
+        //filter by popularity
+    }
+    if (genre)
+    {
+        //filter by genre
+    }
+
+    //finally, print the artist!
+    std::cout << "Based on your choices, here are some artist you may like: " << std::endl;
+    //print the artist(s) that match!
 
     return 0;
 }
