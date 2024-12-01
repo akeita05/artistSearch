@@ -2,6 +2,7 @@
 // Created by Aicha Keita on 11/29/24.
 //
 #include <iostream>
+#include "artists.h"
 
 
 int main() {
