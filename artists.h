@@ -26,13 +26,28 @@ public:
     //getter for name - aicha
     const std::string& getName() const;
 
+    //getter for energy - aicha
+    float getEnergy() const;
+
+    //getter for danceability - aicha
+    float getDanceability() const;
+
+    //getter for language - aicha
+    bool getLanguage() const;
+
+    //getter for popularity - aicha
+    float getPopularity() const;
+
+    //getter for genre - aicha
+    const std::string& getGenre() const;
+
     //setter for energy - aicha
     void setEnergy(float newEnergy);
 
     //setter for danceability - aicha
     void setDanceability(float newDanceability);
 
-    //setter for language
+    //setter for language - aicha
     void setLanguage(bool newLanguage);
 
     //setter for popularity - aicha
