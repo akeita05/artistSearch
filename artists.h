@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-//I'm making an artist class so that its easier to manipulate and filter in the main :D - aicha
+//I'm making an artist class so that it's easier to manipulate and filter in the main :D - aicha
 class Artist
 {
 private:
