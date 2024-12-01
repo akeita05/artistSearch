@@ -180,6 +180,7 @@ int main()
     }
 
     //finally, print the artist!
+    //there are 31,000+ unique artists in the dataset, so like maybe we only show like 10 of them based on the choices made???
     std::cout << "Based on your choices, here are some artist you may like: " << std::endl;
     //print the artist(s) that match!
 
