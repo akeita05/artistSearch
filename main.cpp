@@ -6,6 +6,9 @@
 #include <vector>
 #include <string>
 
+#include "artists.h"
+
+
 
 int main()
 {
