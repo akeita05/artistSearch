@@ -5,13 +5,36 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
-#include "artists.h"
 
+#include "hashtable.h"
+
+
+// Helper function to convert a string to lowercase - Dylan
+std::string toLower(const std::string &str) {
+    std::string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
 
 
 int main()
 {
+
+    string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
+    vector<Artist> artists = parseArtists(filePath); // artists declared here
+
+    //create a hashmap from the parsed data :p - aicha
+    HashTable h;
+    h.createMap(artists);
+
+    if (artists.empty()) {
+        cerr << "No artists loaded. Please check the dataset file!" << endl;
+        return 1;
+    }
+
+
     //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
     std::cout << std:: endl;
@@ -30,6 +53,7 @@ int main()
     std::cout << "   How popular the artist's songs are on average" << std::endl;
     std::cout << "5. Genre" << std::endl;
     std::cout << "   The genre in which the artist belongs" << std::endl;
+    std::cout << "6. Search for an Artist" << std::endl; // Just to test parsing function - dylan
     std::cout << std::endl;
 
     std::cout << "First, pick the categories you want to filter by!!! (You can choose up to five)" << std::endl;
@@ -144,6 +168,42 @@ int main()
             genre = true;
 
             std::cout << std::endl;
+
+
+        }  else if (dividedInput[0] == "6" && !popularity) { // this is just so i can test if the parsing works - Dylan
+            std::cout << "Enter the name of the artist you want to search for: ";
+            std::string searchTerm;
+            std::getline(std::cin, searchTerm);
+
+            bool found = false;
+
+            std::string lowerSearchTerm = toLower(searchTerm);
+
+            // Search for the artist in the list
+            for (auto it : h.getHashmap())
+            {
+                if (toLower(it.first).find(lowerSearchTerm) != string::npos)
+                {
+                    cout << "Found artist: " << it.second.getName() << std::endl;
+                    cout << "Danceability: " << it.second.getDanceability() << std::endl;
+                    cout << "Explicit: " << it.second.getLanguage() << std::endl;
+                    cout << "Energy: " << it.second.getEnergy() << std::endl;
+                    cout << "Genre: " << it.second.getGenre() << std::endl;
+
+                    found = true;
+                    break;  // We stop after finding the first match
+                }
+            }
+
+            if (!found)
+            {
+                std::cout << "No artist found with the name: " << searchTerm << std::endl;
+            }
+
+            if (!found)
+            {
+                std::cout << "No artist found with the name: " << searchTerm << std::endl;
+            }
         }
         else
         {
@@ -157,30 +217,39 @@ int main()
         filterNum--;
     }
 
+    vector<Artist> filteredArtists;
+
     //filter! :-P - aicha
     if (energy)
     {
-        //filter by energy
+        filteredArtists = h.energyFilter(filteredArtists, energyLevel);
     }
     if (danceability)
     {
-        //filter by danceability
+        filteredArtists = h.danceabilityFilter(filteredArtists, danceabilityLevel);
     }
     if (language)
     {
-        //filter by language
+        filteredArtists = h.languageFilter(filteredArtists, explicitLang);
     }
     if (popularity)
     {
-        //filter by popularity
+        filteredArtists = h.popularityFilter(filteredArtists, popularityLevel);
     }
     if (genre)
     {
-        //filter by genre
+        filteredArtists = h.genreFilter(filteredArtists, genreType);
     }
+
+    //we currently only have one non-trivial comparable algorithms or data structures...
+    //we need another for full credit :/ - aicha
+    //i was thinking maybe a sorting algorithm like merge sort... but idk what to sort by - aicha
 
     //finally, print the artist!
     //there are 31,000+ unique artists in the dataset, so like maybe we only show like 10 of them based on the choices made???
+    //^we could show like 10 at a time and let them choose if they'd like to see more...
+    //like "showing 10/however many artist
+    //- aicha
     std::cout << "Based on your choices, here are some artist you may like: " << std::endl;
     //print the artist(s) that match!
 
