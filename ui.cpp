@@ -1,5 +1,4 @@
 #include "ui.h"
-
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
