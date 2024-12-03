@@ -1,14 +1,11 @@
-//
-// Created by Aicha Keita on 11/29/24.
-//
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <string>
 #include <algorithm>
 
-
 #include "hashtable.h"
+using namespace std;
 
 
 // Helper function to convert a string to lowercase - Dylan
@@ -18,73 +15,52 @@ std::string toLower(const std::string &str) {
     return lowerStr;
 }
 
+// Displays 10 artists based off filter - Dylan
+void displayTopArtists(const vector<Artist>& filteredArtists) {
+    if (filteredArtists.empty()) {
+        cout << "No artists matched your criteria. Please try again with different filters." << endl;
+    } else {
+        cout << "Displaying up to 10 artists that matched your criteria:\n" << endl;
 
-int main()
-{
+        int limit = min(10, static_cast<int>(filteredArtists.size()));
+        for (int i = 0; i < limit; ++i) {
+            cout << "Artist: " << filteredArtists[i].getName() << endl;
+            cout << "  Danceability: " << filteredArtists[i].getDanceability() << endl;
+            cout << "  Explicit: " << (filteredArtists[i].getLanguage() ? "Yes" : "No") << endl;
+            cout << "  Energy: " << filteredArtists[i].getEnergy() << endl;
+            cout << "  Popularity: " << filteredArtists[i].getPopularity() << endl;
+            cout << "  Genre: " << filteredArtists[i].getGenre() << endl;
+            cout << endl;
+        }
+    }
+}
 
-    string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
-    vector<Artist> artists = parseArtists(filePath); // artists declared here
 
-    //create a hashmap from the parsed data :p - aicha
-    HashTable h;
-    h.createMap(artists);
+int main() {
+    // File path to the dataset
+    std::string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
+    std::vector<Artist> artists = parseArtists(filePath);
 
     if (artists.empty()) {
-        cerr << "No artists loaded. Please check the dataset file!" << endl;
+        std::cerr << "No artists loaded. Please check the dataset file!" << std::endl;
         return 1;
     }
 
+    // Create the hash map
+    HashTable h;
+    h.createMap(artists);
 
-    //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
-    std::cout << std:: endl;
+    std::cout << std::endl;
 
-    std::cout << "Let's get started!" << std::endl;
-    std::cout << "You will be able to filter for artists by these categories: " << std::endl;
-
+    std::cout << "You can filter for artists by the following categories: " << std::endl;
     std::cout << "1. Average Song Energy" << std::endl;
-    std::cout << "   This is a perceptual measure of intensity and activity on average of the artist's song. "
-                 "Typically, energetic tracks feel fast, loud, and noisy" << std::endl;
     std::cout << "2. Average Song Danceability" << std::endl;
-    std::cout << "   This is how on suitable on average the artist's songs are for dancing." << std::endl;
     std::cout << "3. Explicit Language" << std::endl;
-    std::cout << "   Whether or not the artist has songs with explicit lyrics" << std::endl;
     std::cout << "4. Average Song Popularity" << std::endl;
-    std::cout << "   How popular the artist's songs are on average" << std::endl;
     std::cout << "5. Genre" << std::endl;
-    std::cout << "   The genre in which the artist belongs" << std::endl;
-    std::cout << "6. Search for an Artist" << std::endl; // Just to test parsing function - dylan
-    std::cout << std::endl;
 
-    std::cout << "First, pick the categories you want to filter by!!! (You can choose up to five)" << std::endl;
-    std::cout << "1. Energy" << std::endl;
-    std::cout << "2. Danceability" << std::endl;
-    std::cout << "3. Explicit Language" << std::endl;
-    std::cout << "4. Popularity" << std::endl;
-    std::cout << "5. Genre" << std::endl;
-    std::cout << "Enter the number(s) of the categories you want to filter by! (please separate different categories with a space)" << std::endl;
-
-    //variables :) - aicha
-    std::string filterInput;
-
-    //interpret the input :) - aicha
-    std::getline(std::cin, filterInput);
-    std::cout << std::endl;
-
-    //split the input into a vector :) - aicha
-    std::vector<std::string> dividedInput;
-
-    //split the string by spaces :-) - aicha
-    std::istringstream iss(filterInput);
-    std::string inputPart;
-    while (iss >> inputPart)
-    {
-        dividedInput.push_back(inputPart);
-    }
-
-    //understanding the input: variables :D - aicha
-    int filterNum = dividedInput.size();
-
+    // Variables for filtering
     float energyLevel = 0.0;
     bool energy = false;
 
@@ -100,158 +76,70 @@ int main()
     std::string genreType;
     bool genre = false;
 
-    //figure our what we are filtering by and give the user choices :D - aicha
-    while (filterNum > 0)
-    {
-        if(dividedInput[0] == "1" && !energy)
-        {
-            //TO DO: energy choices
-            std::cout << "You've chosen energy!" << std::endl;
-            std::cout << "Enter a number between 1-10 for how energetic you would like the artist's songs to be." << std::endl;
-            std::cout << "(10 being the highest possible energy, 1 being the lowest)" << std::endl;
+    // Get filtering options from the user
+    std::cout << "Enter the numbers of the categories you want to filter by (separate with space): ";
+    std::string filterInput;
+    std::getline(std::cin, filterInput);
+    std::cout << std::endl;
 
+    // Parse the input
+    std::istringstream iss(filterInput);
+    std::vector<std::string> dividedInput(std::istream_iterator<std::string>{iss}, {});
+
+    for (const auto& filter : dividedInput) {
+        if (filter == "1" && !energy) {
+            std::cout << "Enter a number between 1-10 for desired energy level: ";
             std::cin >> energyLevel;
             energy = true;
-
-            std::cout << std::endl;
-        }
-        else if (dividedInput[0] == "2" && !danceability)
-        {
-            //TO DO: danceability choices
-            std::cout << "You've chosen danceability!" << std::endl;
-            std::cout << "Enter a number between 1-10 for how danceable you would like the artist's songs to be." << std::endl;
-            std::cout << "(10 being the highest possible danceability, 1 being the lowest)" << std::endl;
-
+        } else if (filter == "2" && !danceability) {
+            std::cout << "Enter a number between 1-10 for desired danceability: ";
             std::cin >> danceabilityLevel;
             danceability = true;
-
-            std::cout << std::endl;
-        }
-        else if (dividedInput[0] == "3" && !language)
-        {
-            //TO DO: explicit language choices
-            std::cout << "You've chosen explicit language!" << std::endl;
-            std::cout << "Type in 'T' if you want you want explicit language and 'F' if you don't." << std::endl;
-
-            std::string tOrF;
-            std::cin >> tOrF;
-
-            if (tOrF == "T")
-            {
-                explicitLang = true;
-            }
-            else if (tOrF == "F")
-            {
-                explicitLang = false;
-            }
-
+        } else if (filter == "3" && !language) {
+            std::cout << "Type 'T' for explicit language or 'F' for clean lyrics: ";
+            char choice;
+            std::cin >> choice;
+            explicitLang = (choice == 'T' || choice == 't');
             language = true;
-
-            std::cout << std::endl;
-        }
-        else if (dividedInput[0] == "4" && !popularity)
-        {
-            //TO DO: popularity choices
-            std::cout << "You've chosen popularity!" << std::endl;
-            std::cout << "Enter a number between 1-10 for how popular you would like the artist's songs to be." << std::endl;
-            std::cout << "(10 being the most popular, 1 being the least)" << std::endl;
-
+        } else if (filter == "4" && !popularity) {
+            std::cout << "Enter a number between 1-10 for desired popularity: ";
             std::cin >> popularityLevel;
             popularity = true;
-
-            std::cout << std::endl;
-        }
-        else if (dividedInput[0] == "5" && !genre)
-        {
-            //TO DO: genre choices
-            //y'all there's like 114 different genres so if anyone has an idea of how to do it I'm all ears - aicha
+        } else if (filter == "5" && !genre) {
+            std::cout << "Enter the desired genre: ";
+            std::cin.ignore();
+            std::getline(std::cin, genreType);
             genre = true;
-
-            std::cout << std::endl;
-
-
-        }  else if (dividedInput[0] == "6" && !popularity) { // this is just so i can test if the parsing works - Dylan
-            std::cout << "Enter the name of the artist you want to search for: ";
-            std::string searchTerm;
-            std::getline(std::cin, searchTerm);
-
-            bool found = false;
-
-            std::string lowerSearchTerm = toLower(searchTerm);
-
-            // Search for the artist in the list
-            for (auto it : h.getHashmap())
-            {
-                if (toLower(it.first).find(lowerSearchTerm) != string::npos)
-                {
-                    cout << "Found artist: " << it.second.getName() << std::endl;
-                    cout << "Danceability: " << it.second.getDanceability() << std::endl;
-                    cout << "Explicit: " << it.second.getLanguage() << std::endl;
-                    cout << "Energy: " << it.second.getEnergy() << std::endl;
-                    cout << "Genre: " << it.second.getGenre() << std::endl;
-
-                    found = true;
-                    break;  // We stop after finding the first match
-                }
-            }
-
-            if (!found)
-            {
-                std::cout << "No artist found with the name: " << searchTerm << std::endl;
-            }
-
-            if (!found)
-            {
-                std::cout << "No artist found with the name: " << searchTerm << std::endl;
-            }
+        } else {
+            std::cout << "Invalid option: " << filter << std::endl;
         }
-        else
-        {
-            std::cout << "Invalid Entry :(" << std::endl;
-
-            std::cout << std::endl;
-        }
-
-        //remove the first element and move on :D - aicha
-        dividedInput.erase(dividedInput.begin());
-        filterNum--;
     }
 
-    vector<Artist> filteredArtists;
+    std::vector<Artist> filteredArtists;
 
-    //filter! :-P - aicha
-    if (energy)
-    {
+    // Apply filters in sequence
+    if (energy) {
         filteredArtists = h.energyFilter(filteredArtists, energyLevel);
     }
-    if (danceability)
-    {
+    if (danceability) {
         filteredArtists = h.danceabilityFilter(filteredArtists, danceabilityLevel);
     }
-    if (language)
-    {
+    if (language) {
         filteredArtists = h.languageFilter(filteredArtists, explicitLang);
     }
-    if (popularity)
-    {
+    if (popularity) {
         filteredArtists = h.popularityFilter(filteredArtists, popularityLevel);
     }
-    if (genre)
-    {
+    if (genre) {
         filteredArtists = h.genreFilter(filteredArtists, genreType);
     }
 
-    //we currently only have one non-trivial comparable algorithms or data structures...
-    //we need another for full credit :/ - aicha
-    //i was thinking maybe a sorting algorithm like merge sort... but idk what to sort by - aicha
-
-    //finally, print the artist!
-    //there are 31,000+ unique artists in the dataset, so like maybe we only show like 10 of them based on the choices made???
-    //^we could show like 10 at a time and let them choose if they'd like to see more...
-    //like "showing 10/however many artist
-    //- aicha
-    std::cout << "Based on your choices, here are some artist you may like: " << std::endl;
-    //print the artist(s) that match!
+    // Display filtered results
+    if (filteredArtists.empty()) {
+        std::cout << "No artists matched your criteria. Please try again with different filters." << std::endl;
+    } else {
+        displayTopArtists(filteredArtists);
+    }
 
     return 0;
 }
