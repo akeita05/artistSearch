@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "artists.h"
+#include "hashtable.h"
 
 
 
