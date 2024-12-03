@@ -5,11 +5,11 @@ Welcome to GatorTunes: Artist Search, a program that allows you to search for ar
 
 The program will begin with a welcome message and present you with a list of categories you can filter by. Here's what you can do!
 
-Filter by Energy: You can choose the energy level of an artist's songs (from 1 to 10).
-Filter by Danceability: You can choose how danceable the artist's songs should be (from 1 to 10).
-Filter by Explicit Language: You can filter for artists whose songs contain explicit language (choose between "T" for true or "F" for false).
-Filter by Popularity: You can choose how popular you want the artist’s songs to be (from 1 to 10).
-Filter by Genre: You can choose the genre you want the artist to belong to.
+1. Filter by Energy: You can choose the energy level of an artist's songs (from 1 to 10).
+2. Filter by Danceability: You can choose how danceable the artist's songs should be (from 1 to 10).
+3. Filter by Explicit Language: You can filter for artists whose songs contain explicit language (choose between "T" for true or "F" for false).
+4. Filter by Popularity: You can choose how popular you want the artist’s songs to be (from 1 to 10).
+5. Filter by Genre: You can choose the genre you want the artist to belong to.
 
 ### Step 2: Filter!!!
 
