@@ -1,12 +1,14 @@
 //
 // Created by Aicha Keita on 12/1/24.
 //
-#include "artists.h"
+
 #include <string>
 #include <vector>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
+#include "artists.h"
 
 using namespace std;
 

@@ -11,7 +11,7 @@ bool inRange(float low, float high, float level)
 }
 
 //function to turn the parsed vector in a usable hashMap :p - aicha
-void HashTable::createMap(std::vector<Artist> artists)
+std::unordered_map<std::string, Artist> HashTable::createMap(std::vector<Artist> artists)
 {
     for (int i = 0; i < artists.size(); i++)
     {
@@ -40,8 +40,11 @@ void HashTable::createMap(std::vector<Artist> artists)
             existingArtist.setPopularity(newPopularity);
         }
     }
+
+    return hashMap;
 }
 
+//filter by energy :p - aicha
 std::vector<Artist> HashTable::energyFilter(std::vector<Artist> artists, float energyLevel)
 {
     float energy = energyLevel / 10;
@@ -70,6 +73,7 @@ std::vector<Artist> HashTable::energyFilter(std::vector<Artist> artists, float e
     return artists;
 }
 
+//filter by danceability :p - aicha
 std::vector<Artist> HashTable::danceabilityFilter(std::vector<Artist> artists, float danceabilityLevel)
 {
     float danceability = danceabilityLevel / 10;
@@ -98,6 +102,7 @@ std::vector<Artist> HashTable::danceabilityFilter(std::vector<Artist> artists, f
     return artists;
 }
 
+//filter by language :p - aicha
 std::vector<Artist> HashTable::languageFilter(std::vector<Artist> artists, bool language)
 {
     if(artists.empty())
@@ -124,6 +129,7 @@ std::vector<Artist> HashTable::languageFilter(std::vector<Artist> artists, bool 
     return artists;
 }
 
+//filter by popularity :p - aicha
 std::vector<Artist> HashTable::popularityFilter(std::vector<Artist> artists, float popularityLevel)
 {
     float popularity = popularityLevel * 10;
@@ -152,6 +158,7 @@ std::vector<Artist> HashTable::popularityFilter(std::vector<Artist> artists, flo
     return artists;
 }
 
+//filter by genre :p - aicha
 std::vector<Artist> HashTable::genreFilter(std::vector<Artist> artists, std::string genre)
 {
     if(artists.empty())
@@ -176,4 +183,10 @@ std::vector<Artist> HashTable::genreFilter(std::vector<Artist> artists, std::str
     }
 
     return artists;
+}
+
+//getter for the hashmap - aicha
+std::unordered_map<std::string, Artist> HashTable::getHashmap()
+{
+    return hashMap;
 }
