@@ -17,7 +17,7 @@ private:
     std::unordered_map<std::string, Artist> hashMap;
 
 public:
-    //idk man figure it out
+    //stuff :)
 
 };
 #endif //ARTISTSEARCH_HASHTABLE_H
