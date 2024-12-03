@@ -5,17 +5,15 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 
 #include "hashtable.h"
 
-#include "artists.h"
-using namespace std;
-
 
 // Helper function to convert a string to lowercase - Dylan
 std::string toLower(const std::string &str) {
-    string lowerStr = str;
+    std::string lowerStr = str;
     transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
 }
@@ -26,6 +24,10 @@ int main()
 
     string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
     vector<Artist> artists = parseArtists(filePath); // artists declared here
+
+    //create a hashmap from the parsed data :p - aicha
+    HashTable h;
+    h.createMap(artists);
 
     if (artists.empty()) {
         cerr << "No artists loaded. Please check the dataset file!" << endl;
@@ -175,11 +177,13 @@ int main()
 
             bool found = false;
 
-            string lowerSearchTerm = toLower(searchTerm);
+            std::string lowerSearchTerm = toLower(searchTerm);
 
             // Search for the artist in the list
-            for (const Artist& artist : artists) {
-                if (toLower(artist.getName()).find(lowerSearchTerm) != string::npos) {
+            for (const Artist& artist : artists)
+            {
+                if (toLower(artist.getName()).find(lowerSearchTerm) != string::npos)
+                {
                     cout << "Found artist: " << artist.getName() << std::endl;
                     cout << "Danceability: " << artist.getDanceability() << std::endl;
                     cout << "Explicit: " << artist.getLanguage() << std::endl;
@@ -191,11 +195,13 @@ int main()
                 }
             }
 
-            if (!found) {
+            if (!found)
+            {
                 std::cout << "No artist found with the name: " << searchTerm << std::endl;
             }
 
-            if (!found) {
+            if (!found)
+            {
                 std::cout << "No artist found with the name: " << searchTerm << std::endl;
             }
         }
@@ -215,32 +221,29 @@ int main()
         filterNum--;
     }
 
-    vector<Artist> filteredArtists = artists;
+    vector<Artist> filteredArtists;
 
     //filter! :-P - aicha
     if (energy)
     {
-        filteredArtists.erase(
-                remove_if(filteredArtists.begin(), filteredArtists.end(),
-                          [energyLevel](const Artist &a) { return a.getEnergy() < energyLevel; }),
-                filteredArtists.end());
+        h.energyFilter(filteredArtists, energyLevel);
     }
 
     if (danceability)
     {
-        //filter by danceability
+        h.danceabilityFilter(filteredArtists, danceabilityLevel);
     }
     if (language)
     {
-        //filter by language
+        h.languageFilter(filteredArtists, explicitLang);
     }
     if (popularity)
     {
-        //filter by popularity
+        h.popularityFilter(filteredArtists, popularityLevel);
     }
     if (genre)
     {
-        //filter by genre
+        h.genreFilter(filteredArtists, genreType);
     }
 
     //finally, print the artist!
