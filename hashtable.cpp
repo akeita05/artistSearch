@@ -53,7 +53,7 @@ std::vector<Artist> HashTable::energyFilter(std::vector<Artist> artists, float e
     {
         for (auto it : hashMap)
         {
-            if (inRange(energy - 0.5, energy + 0.5, it.second.getEnergy()))
+            if (inRange(energy - 0.05, energy + 0.05, it.second.getEnergy()))
             {
                 artists.push_back(it.second);
             }
@@ -64,7 +64,7 @@ std::vector<Artist> HashTable::energyFilter(std::vector<Artist> artists, float e
 
     for(int i = 0; i < artists.size(); i++)
     {
-        if(!(inRange(energy - 0.5, energy + 0.5, artists[i].getEnergy())))
+        if(!(inRange(energy - 0.05, energy + 0.05, artists[i].getEnergy())))
         {
             artists.erase(artists.begin() + i);
         }
@@ -82,7 +82,7 @@ std::vector<Artist> HashTable::danceabilityFilter(std::vector<Artist> artists, f
     {
         for (auto it : hashMap)
         {
-            if (inRange(danceability - 0.5, danceability + 0.5, it.second.getDanceability()))
+            if (inRange(danceability - 0.05, danceability + 0.05, it.second.getDanceability()))
             {
                 artists.push_back(it.second);
             }
@@ -93,7 +93,7 @@ std::vector<Artist> HashTable::danceabilityFilter(std::vector<Artist> artists, f
 
     for(int i = 0; i < artists.size(); i++)
     {
-        if(!(inRange(danceability - 0.5, danceability + 0.5, artists[i].getDanceability())))
+        if(!(inRange(danceability - 0.05, danceability + 0.05, artists[i].getDanceability())))
         {
             artists.erase(artists.begin() + i);
         }
