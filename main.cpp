@@ -226,24 +226,23 @@ int main()
     //filter! :-P - aicha
     if (energy)
     {
-        h.energyFilter(filteredArtists, energyLevel);
+        filteredArtists = h.energyFilter(filteredArtists, energyLevel);
     }
-
     if (danceability)
     {
-        h.danceabilityFilter(filteredArtists, danceabilityLevel);
+        filteredArtists = h.danceabilityFilter(filteredArtists, danceabilityLevel);
     }
     if (language)
     {
-        h.languageFilter(filteredArtists, explicitLang);
+        filteredArtists = h.languageFilter(filteredArtists, explicitLang);
     }
     if (popularity)
     {
-        h.popularityFilter(filteredArtists, popularityLevel);
+        filteredArtists = h.popularityFilter(filteredArtists, popularityLevel);
     }
     if (genre)
     {
-        h.genreFilter(filteredArtists, genreType);
+        filteredArtists = h.genreFilter(filteredArtists, genreType);
     }
 
     //finally, print the artist!
