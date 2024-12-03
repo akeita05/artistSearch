@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <random>
 
 #include "hashtable.h"
 using namespace std;
@@ -16,11 +17,17 @@ std::string toLower(const std::string &str) {
 }
 
 // Displays 10 artists based off filter - Dylan
-void displayTopArtists(const vector<Artist>& filteredArtists) {
+void displayTopArtists(vector<Artist> filteredArtists) {
     if (filteredArtists.empty()) {
         cout << "No artists matched your criteria. Please try again with different filters." << endl;
     } else {
-        cout << "Displaying up to 10 artists that matched your criteria:\n" << endl;
+        random_device randomDevice;      // Random number seed generator
+        mt19937 generator(randomDevice());
+
+        // Shuffle the filteredArtists vector
+        shuffle(filteredArtists.begin(), filteredArtists.end(), generator);
+
+        cout << "Displaying up to 10 randomly selected artists that matched your criteria:\n" << endl;
 
         int limit = min(10, static_cast<int>(filteredArtists.size()));
         for (int i = 0; i < limit; ++i) {
