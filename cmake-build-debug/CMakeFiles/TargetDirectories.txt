@@ -1,0 +1,3 @@
+/Users/dxk101/Downloads/artistSearch-main 2/cmake-build-debug/CMakeFiles/artistSearch_main_2.dir
+/Users/dxk101/Downloads/artistSearch-main 2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/dxk101/Downloads/artistSearch-main 2/cmake-build-debug/CMakeFiles/rebuild_cache.dir

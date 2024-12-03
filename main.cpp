@@ -6,12 +6,33 @@
 #include <vector>
 #include <string>
 
+
 #include "hashtable.h"
 
+#include "artists.h"
+using namespace std;
+
+
+// Helper function to convert a string to lowercase - Dylan
+std::string toLower(const std::string &str) {
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
 
 
 int main()
 {
+
+    string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
+    vector<Artist> artists = parseArtists(filePath); // artists declared here
+
+    if (artists.empty()) {
+        cerr << "No artists loaded. Please check the dataset file!" << endl;
+        return 1;
+    }
+
+
     //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
     std::cout << std:: endl;
@@ -30,6 +51,7 @@ int main()
     std::cout << "   How popular the artist's songs are on average" << std::endl;
     std::cout << "5. Genre" << std::endl;
     std::cout << "   The genre in which the artist belongs" << std::endl;
+    std::cout << "6. Search for an Artist" << std::endl; // Just to test parsing function - dylan
     std::cout << std::endl;
 
     std::cout << "First, pick the categories you want to filter by!!! (You can choose up to five)" << std::endl;
@@ -144,7 +166,43 @@ int main()
             genre = true;
 
             std::cout << std::endl;
+
+
+        }  else if (dividedInput[0] == "6" && !popularity) { // this is just so i can test if the parsing works - Dylan
+            std::cout << "Enter the name of the artist you want to search for: ";
+            std::string searchTerm;
+            std::getline(std::cin, searchTerm);
+
+            bool found = false;
+
+            string lowerSearchTerm = toLower(searchTerm);
+
+            // Search for the artist in the list
+            for (const Artist& artist : artists) {
+                if (toLower(artist.getName()).find(lowerSearchTerm) != string::npos) {
+                    cout << "Found artist: " << artist.getName() << std::endl;
+                    cout << "Danceability: " << artist.getDanceability() << std::endl;
+                    cout << "Explicit: " << artist.getLanguage() << std::endl;
+                    cout << "Energy: " << artist.getEnergy() << std::endl;
+                    cout << "Genre: " << artist.getGenre() << std::endl;
+
+                    found = true;
+                    break;  // We stop after finding the first match
+                }
+            }
+
+            if (!found) {
+                std::cout << "No artist found with the name: " << searchTerm << std::endl;
+            }
+
+            if (!found) {
+                std::cout << "No artist found with the name: " << searchTerm << std::endl;
+            }
         }
+
+
+
+
         else
         {
             std::cout << "Invalid Entry :(" << std::endl;
@@ -157,11 +215,17 @@ int main()
         filterNum--;
     }
 
+    vector<Artist> filteredArtists = artists;
+
     //filter! :-P - aicha
     if (energy)
     {
-        //filter by energy
+        filteredArtists.erase(
+                remove_if(filteredArtists.begin(), filteredArtists.end(),
+                          [energyLevel](const Artist &a) { return a.getEnergy() < energyLevel; }),
+                filteredArtists.end());
     }
+
     if (danceability)
     {
         //filter by danceability

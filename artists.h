@@ -6,7 +6,9 @@
 #define ARTISTSEARCH_ARTISTS_H
 
 #include <iostream>
+#include <vector>
 #include <string>
+using namespace std;
 
 //I'm making an artist class so that it's easier to manipulate and filter in the main :D - aicha
 class Artist
@@ -21,7 +23,7 @@ private:
 
 public:
     //constructor - aicha
-    Artist(std::string& name, float energy, float danceability, bool language, float popularity, std::string& genre);
+    Artist(const std::string &name, float energy, float danceability, bool language, float popularity, const std::string &genre);
 
     //getter for name - aicha
     const std::string& getName() const;
@@ -53,7 +55,11 @@ public:
     //setter for popularity - aicha
     void setPopularity(float newPopularity);
 
+
+
 };
+
+vector<Artist> parseArtists(const string &filename); // getter for parsing artists - :Dylan
 
 
 #endif //ARTISTSEARCH_ARTISTS_H
