@@ -18,7 +18,7 @@ private:
 
 public:
     //function to turn the parsed vector in a usable hashMap :) - aicha
-    void createMap(std::vector<Artist> artists);
+    std::unordered_map<std::string, Artist> createMap(std::vector<Artist> artists);
 
     //filter by energy :p - aicha
     std::vector<Artist> energyFilter(std::vector<Artist> artists, float energyLevel);
@@ -35,6 +35,8 @@ public:
     //filter by genre :p - aicha
     std::vector<Artist> genreFilter(std::vector<Artist> artists, std::string genre);
 
+    //getter for the hashMap - aicha
+    std::unordered_map<std::string, Artist> getHashmap();
 
 };
 #endif //ARTISTSEARCH_HASHTABLE_H
