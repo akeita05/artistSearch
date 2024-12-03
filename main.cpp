@@ -6,8 +6,12 @@
 #include <vector>
 #include <string>
 
+
+#include "hashtable.h"
+
 #include "artists.h"
 using namespace std;
+
 
 // Helper function to convert a string to lowercase - Dylan
 std::string toLower(const std::string &str) {
