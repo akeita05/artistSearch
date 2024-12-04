@@ -4,10 +4,9 @@
 #include <string>
 #include <algorithm>
 #include <random>
-
+#include <numeric>
 #include "hashtable.h"
 using namespace std;
-
 
 // Helper function to convert a string to lowercase - Dylan
 std::string toLower(const std::string &str) {
@@ -38,7 +37,6 @@ vector<Artist> selectWeightedRandomArtists(const vector<Artist>& artists, int ma
     mt19937 generator(randomDevice());
     uniform_real_distribution<double> dist(0.0, 1.0);
 
-
     double totalWeight = calculateTotalWeight(weights);
 
     // Select artists based on weighted probability
@@ -59,15 +57,20 @@ vector<Artist> selectWeightedRandomArtists(const vector<Artist>& artists, int ma
     return selectedArtists;
 }
 
-// Displays 10 artists based on filter and weighted randomness
-void displayTopArtists(const vector<Artist>& filteredArtists) {
-    if (filteredArtists.empty()) {
+// Sorting function for popularity (from greatest to least)
+bool comparePopularity(const Artist& a, const Artist& b) {
+    return a.getPopularity() > b.getPopularity(); // Descending order
+}
+
+// Function to display the top 10 artists
+void displayTopArtists(const vector<Artist>& sortedArtists) {
+    if (sortedArtists.empty()) {
         cout << "No artists matched your criteria. Please try again with different filters." << endl;
     } else {
-        vector<Artist> topArtists = selectWeightedRandomArtists(filteredArtists, 10);
-        cout << "Displaying up to 10 weighted random artists:\n" << endl;
-
-        for (const auto& artist : topArtists) {
+        cout << "Based on your choices, here are some artist you may like:\n " << std::endl;
+        int limit = min(10, static_cast<int>(sortedArtists.size()));
+        for (int i = 0; i < limit; ++i) {
+            const auto& artist = sortedArtists[i];
             cout << "Artist: " << artist.getName() << endl;
             cout << "  Danceability: " << artist.getDanceability() << endl;
             cout << "  Explicit: " << (artist.getLanguage() ? "Yes" : "No") << endl;
@@ -80,6 +83,51 @@ void displayTopArtists(const vector<Artist>& filteredArtists) {
 }
 
 
+void merge(vector<Artist>& arr, int left, int right, bool (*compare)(const Artist&, const Artist&)) {
+    if (left == right) return;
+
+    int mid = (left + right) / 2;
+    merge(arr, left, mid, compare);
+    merge(arr, mid + 1, right, compare);
+
+    vector<Artist> temp;
+    int i = left, j = mid + 1;
+
+    while (i <= mid && j <= right) {
+        if (compare(arr[i], arr[j])) {
+            temp.push_back(arr[i]);
+            i++;
+        } else {
+            temp.push_back(arr[j]);
+            j++;
+        }
+    }
+
+    while (i <= mid) {
+        temp.push_back(arr[i]);
+        i++;
+    }
+
+    while (j <= right) {
+        temp.push_back(arr[j]);
+        j++;
+    }
+
+    for (int i = left; i <= right; i++) {
+        arr[i] = temp[i - left];
+    }
+}
+
+//merge sort: I can only get it to work for popularity atm - :Dylan
+void mergeSort(vector<Artist>& arr, int left, int right, bool (*compare)(const Artist&, const Artist&)) {
+    if (left < right) {
+        int mid = (left + right) / 2;
+        mergeSort(arr, left, mid, compare);
+        mergeSort(arr, mid + 1, right, compare);
+        merge(arr, left, right, compare);
+    }
+}
+
 int main() {
     // File path to the dataset
     std::string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
@@ -90,21 +138,44 @@ int main() {
         return 1;
     }
 
-    // Create the hash map
+    //create a hashmap from the parsed data :p - aicha
     HashTable h;
     h.createMap(artists);
 
+    if (artists.empty()) {
+        cerr << "No artists loaded. Please check the dataset file!" << endl;
+        return 1;
+    }
+
+    //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
+    std::cout << std:: endl;
+
+    std::cout << "Let's get started!" << std::endl;
+    std::cout << "You will be able to filter for artists by these categories: " << std::endl;
+
+    std::cout << "1. Average Song Energy" << std::endl;
+    std::cout << "   This is a perceptual measure of intensity and activity on average of the artist's song. "
+                 "Typically, energetic tracks feel fast, loud, and noisy" << std::endl;
+    std::cout << "2. Average Song Danceability" << std::endl;
+    std::cout << "   This is how on suitable on average the artist's songs are for dancing." << std::endl;
+    std::cout << "3. Explicit Language" << std::endl;
+    std::cout << "   Whether or not the artist has songs with explicit lyrics" << std::endl;
+    std::cout << "4. Average Song Popularity" << std::endl;
+    std::cout << "   How popular the artist's songs are on average" << std::endl;
+    std::cout << "5. Genre" << std::endl;
+    std::cout << "   The genre in which the artist belongs" << std::endl;
     std::cout << std::endl;
 
-    std::cout << "You can filter for artists by the following categories: " << std::endl;
-    std::cout << "1. Average Song Energy" << std::endl;
-    std::cout << "2. Average Song Danceability" << std::endl;
+    std::cout << "First, pick the categories you want to filter by!!! (You can choose up to five)" << std::endl;
+    std::cout << "1. Energy" << std::endl;
+    std::cout << "2. Danceability" << std::endl;
     std::cout << "3. Explicit Language" << std::endl;
-    std::cout << "4. Average Song Popularity" << std::endl;
+    std::cout << "4. Popularity" << std::endl;
     std::cout << "5. Genre" << std::endl;
 
-    // Variables for filtering
+
+    //understanding the input: variables :D - aicha
     float energyLevel = 0.0;
     bool energy = false;
 
@@ -126,7 +197,7 @@ int main() {
     std::getline(std::cin, filterInput);
     std::cout << std::endl;
 
-    // Parse the input
+    //split the string by spaces :-) - aicha
     std::istringstream iss(filterInput);
     std::vector<std::string> dividedInput(std::istream_iterator<std::string>{iss}, {});
 
@@ -161,7 +232,7 @@ int main() {
 
     std::vector<Artist> filteredArtists;
 
-    // Apply filters in sequence
+    //filter! :-P - aicha
     if (energy) {
         filteredArtists = h.energyFilter(filteredArtists, energyLevel);
     }
@@ -178,10 +249,22 @@ int main() {
         filteredArtists = h.genreFilter(filteredArtists, genreType);
     }
 
-    // Display filtered results
     if (filteredArtists.empty()) {
-        std::cout << "No artists matched your criteria. Please try again with different filters." << std::endl;
+        cout << "No artists matched your criteria. Please try again with different filters." << endl;
     } else {
+
+        //finally, print the artist!
+        //there are 31,000+ unique artists in the dataset, so like maybe we only show like 10 of them based on the choices made???
+        //^we could show like 10 at a time and let them choose if they'd like to see more...
+        //like "showing 10/however many artist
+        //- aicha
+
+
+
+        // Sort the filtered artists by popularity using merge sort
+        mergeSort(filteredArtists, 0, filteredArtists.size() - 1, comparePopularity);
+
+        // Display top ten artists
         displayTopArtists(filteredArtists);
     }
 
