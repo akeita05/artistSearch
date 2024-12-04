@@ -99,7 +99,6 @@ vector<Artist> parseArtists(const string &filename) {
             // Parse genre
             getline(ss, genre, ',');  // This reads everything after the last comma
             genre = trim(genre);
-            cout << "Parsed Genre: " << genre << endl;
 
 
             // Add artist to the list

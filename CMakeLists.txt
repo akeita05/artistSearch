@@ -2,12 +2,17 @@ cmake_minimum_required(VERSION 3.16)
 project(project3)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 include(FetchContent)
 FetchContent_Declare(SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.x)
+        GIT_TAG 2.6.x
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/_deps/sfml-src
+        BINARY_DIR ${CMAKE_BINARY_DIR}/_deps/sfml-build
+)
 FetchContent_MakeAvailable(SFML)
 
 add_executable(artistSearch
@@ -17,6 +22,8 @@ add_executable(artistSearch
         main.cpp
         ui.cpp
         ui.h
+        hashtable.cpp
+        hashtable.h
 )
 target_link_libraries(artistSearch PRIVATE sfml-graphics)
 target_compile_features(artistSearch PRIVATE cxx_std_17)
