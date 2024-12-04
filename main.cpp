@@ -16,27 +16,64 @@ std::string toLower(const std::string &str) {
     return lowerStr;
 }
 
-// Displays 10 artists based off filter - Dylan
-void displayTopArtists(vector<Artist> filteredArtists) {
+// Helper function to calculate total weight
+double calculateTotalWeight(const vector<double>& weights) {
+    return accumulate(weights.begin(), weights.end(), 0.0);
+}
+
+// Weighted random artists function
+vector<Artist> selectWeightedRandomArtists(const vector<Artist>& artists, int maxCount) {
+    vector<Artist> selectedArtists;
+    if (artists.empty()) {
+        return selectedArtists;
+    }
+
+    vector<double> weights;
+    for (const auto& artist : artists) {
+        weights.push_back(artist.getPopularity());
+    }
+
+    // Set up random number generation
+    random_device randomDevice;
+    mt19937 generator(randomDevice());
+    uniform_real_distribution<double> dist(0.0, 1.0);
+
+
+    double totalWeight = calculateTotalWeight(weights);
+
+    // Select artists based on weighted probability
+    for (int i = 0; i < maxCount && !artists.empty(); ++i) {
+        double randomValue = dist(generator) * totalWeight;
+        double cumulativeWeight = 0.0;
+
+        for (size_t j = 0; j < artists.size(); ++j) {
+            cumulativeWeight += weights[j];
+            if (randomValue <= cumulativeWeight) {
+                selectedArtists.push_back(artists[j]);
+                break;
+            }
+        }
+    }
+    shuffle(selectedArtists.begin(), selectedArtists.end(), generator);
+
+    return selectedArtists;
+}
+
+// Displays 10 artists based on filter and weighted randomness
+void displayTopArtists(const vector<Artist>& filteredArtists) {
     if (filteredArtists.empty()) {
         cout << "No artists matched your criteria. Please try again with different filters." << endl;
     } else {
-        random_device randomDevice;      // Random number seed generator
-        mt19937 generator(randomDevice());
+        vector<Artist> topArtists = selectWeightedRandomArtists(filteredArtists, 10);
+        cout << "Displaying up to 10 weighted random artists:\n" << endl;
 
-        // Shuffle the filteredArtists vector
-        shuffle(filteredArtists.begin(), filteredArtists.end(), generator);
-
-        cout << "Displaying up to 10 randomly selected artists that matched your criteria:\n" << endl;
-
-        int limit = min(10, static_cast<int>(filteredArtists.size()));
-        for (int i = 0; i < limit; ++i) {
-            cout << "Artist: " << filteredArtists[i].getName() << endl;
-            cout << "  Danceability: " << filteredArtists[i].getDanceability() << endl;
-            cout << "  Explicit: " << (filteredArtists[i].getLanguage() ? "Yes" : "No") << endl;
-            cout << "  Energy: " << filteredArtists[i].getEnergy() << endl;
-            cout << "  Popularity: " << filteredArtists[i].getPopularity() << endl;
-            cout << "  Genre: " << filteredArtists[i].getGenre() << endl;
+        for (const auto& artist : topArtists) {
+            cout << "Artist: " << artist.getName() << endl;
+            cout << "  Danceability: " << artist.getDanceability() << endl;
+            cout << "  Explicit: " << (artist.getLanguage() ? "Yes" : "No") << endl;
+            cout << "  Energy: " << artist.getEnergy() << endl;
+            cout << "  Popularity: " << artist.getPopularity() << endl;
+            cout << "  Genre: " << artist.getGenre() << endl;
             cout << endl;
         }
     }
