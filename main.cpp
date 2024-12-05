@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <random>
 #include <numeric>
+#include <iterator> // Include the iterator header
 #include "hashtable.h"
+#include "ui.h"
 using namespace std;
 
 // Helper function to convert a string to lowercase - Dylan
@@ -107,7 +109,6 @@ void merge(vector<Artist>& arr, int left, int right, bool (*compare)(const Artis
         temp.push_back(arr[i]);
         i++;
     }
-
     while (j <= right) {
         temp.push_back(arr[j]);
         j++;
@@ -132,24 +133,34 @@ int main() {
     // File path to the dataset
     std::string filePath = "resources/dataset.csv"; // Ensure this is the correct relative path
     std::vector<Artist> artists = parseArtists(filePath);
-
+    if (artists.empty()) {
+        artists = parseArtists("../../" + filePath);
+    }
     if (artists.empty()) {
         std::cerr << "No artists loaded. Please check the dataset file!" << std::endl;
         return 1;
+    }
+    else
+    {
+        std::cout << "Artists loaded successfully!" << std::endl;
     }
 
     //create a hashmap from the parsed data :p - aicha
     HashTable h;
     h.createMap(artists);
 
-    if (artists.empty()) {
-        cerr << "No artists loaded. Please check the dataset file!" << endl;
-        return 1;
-    }
-
     //create a menu :) - aicha
     std::cout << "Welcome to GatorTunes: Artist Search!" << std::endl;
     std::cout << std:: endl;
+
+    std::cout << "Would you like to launch the UI? (Y/N): ";
+    std::string uiChoice;
+    cin >> uiChoice;
+    std::cin.ignore(); // Clear the newline character from the input buffer
+    if (uiChoice == "y" || uiChoice == "Y") {
+        startUI(filePath);
+        return 0;
+    }
 
     std::cout << "Let's get started!" << std::endl;
     std::cout << "You will be able to filter for artists by these categories: " << std::endl;
@@ -199,7 +210,7 @@ int main() {
 
     //split the string by spaces :-) - aicha
     std::istringstream iss(filterInput);
-    std::vector<std::string> dividedInput(std::istream_iterator<std::string>{iss}, {});
+    std::vector<std::string> dividedInput((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 
     for (const auto& filter : dividedInput) {
         if (filter == "1" && !energy) {
